@@ -1,4 +1,4 @@
-name: Build Windows
+﻿name: Build Windows
 on:
   workflow_dispatch:
   push:
@@ -13,7 +13,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run dist:win
+      - run: npm run dist:win -- --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
       - uses: actions/upload-artifact@v4

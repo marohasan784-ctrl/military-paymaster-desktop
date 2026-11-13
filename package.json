@@ -1,0 +1,100 @@
+{
+  "name": "local-finance-office",
+  "productName": "مكتب الماليات",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline desktop finance office application",
+  "main": "main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron . --dev\"",
+    "build": "vite build",
+    "start": "npm run build && electron .",
+    "test": "node --test",
+    "icons": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ensure-icons.ps1",
+    "dist:win": "npm run icons && npm run build && electron-builder --win --x64",
+    "dist:installer": "npm run icons && npm run build && electron-builder --win nsis --x64",
+    "dist:portable": "npm run icons && npm run build && electron-builder --win portable --x64"
+  },
+  "dependencies": {
+    "@fontsource/cairo": "5.3.0",
+    "@fontsource/tajawal": "5.3.0",
+    "docx": "9.15.3",
+    "docxtemplater": "3.71.1",
+    "exceljs": "4.4.0",
+    "html-to-docx": "1.8.0",
+    "pizzip": "3.3.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "sql.js": "1.15.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.7.0",
+    "autoprefixer": "10.6.2",
+    "concurrently": "9.2.5",
+    "electron": "45.2.3",
+    "electron-builder": "^26.18.0",
+    "postcss": "8.5.32",
+    "tailwindcss": "3.4.19",
+    "vite": "6.4.6",
+    "wait-on": "8.0.5"
+  },
+  "overrides": {
+    "image-size": "2.1.0",
+    "uuid": "11.1.1"
+  },
+  "build": {
+    "appId": "com.maly.financeoffice",
+    "productName": "مكتب الماليات",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "build/icons/icon.ico",
+      "package.json",
+      "!tests/**",
+      "!**/*.test.js",
+      "!**/*.spec.js",
+      "!dist-old/**",
+      "!**/*.db",
+      "!project-code.txt",
+      "!PROJECT_SUMMARY.md",
+      "!BUILD_WINDOWS.md"
+    ],
+    "asarUnpack": [
+      "node_modules/sql.js/dist/sql-wasm.wasm"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "مكتب الماليات",
+      "installerIcon": "build/icons/icon.ico",
+      "uninstallerIcon": "build/icons/icon.ico",
+      "installerHeaderIcon": "build/icons/icon.ico",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}-${arch}.${ext}"
+    },
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  }
+}
